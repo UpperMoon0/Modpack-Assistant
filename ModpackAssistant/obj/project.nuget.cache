@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "UTFgB/1PGb8pquCQ8/RcH/hYC/3EFF0fX55e4pV4NQlEnXgjDZIMOGljqHv+d2xbA+HNo4tk4wGApRAu+U0tQQ==",
+  "success": true,
+  "projectFilePath": "D:\\Dev\\Workspace\\C_Sharp\\ModpackAssistant\\ModpackAssistant\\ModpackAssistant.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\vongu\\.nuget\\packages\\communitytoolkit.mvvm\\8.2.2\\communitytoolkit.mvvm.8.2.2.nupkg.sha512"
+  ],
+  "logs": []
+}
