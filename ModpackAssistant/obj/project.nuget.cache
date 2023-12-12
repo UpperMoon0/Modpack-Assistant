@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "UTFgB/1PGb8pquCQ8/RcH/hYC/3EFF0fX55e4pV4NQlEnXgjDZIMOGljqHv+d2xbA+HNo4tk4wGApRAu+U0tQQ==",
+  "dgSpecHash": "xj88xJLzBx9u14P3vL7q3XAqMEnT3vTmbKHWDG4TOCTrE24KMvoWdbwFvsXGvRtYthOH8UCFs4Gu73K1a0SIxA==",
   "success": true,
-  "projectFilePath": "D:\\Dev\\Workspace\\C_Sharp\\ModpackAssistant\\ModpackAssistant\\ModpackAssistant.csproj",
+  "projectFilePath": "D:\\Dev\\Workspace\\C_Sharp\\Modpack-Assistant\\ModpackAssistant\\ModpackAssistant.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\vongu\\.nuget\\packages\\communitytoolkit.mvvm\\8.2.2\\communitytoolkit.mvvm.8.2.2.nupkg.sha512"
   ],

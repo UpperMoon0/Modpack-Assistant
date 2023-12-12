@@ -1,25 +1,18 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using ModpackAssistant.Service;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ModpackAssistant.ViewModel.RightScreen
 {
     internal class CreatePrjScrViewModel : BaseViewModel
     {
-        private string prjName;
-        private string prjPath;
-        private string fullPath;
+        private string prjName = "New Project";
+        private string prjPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        private string fullPath = "NA";
 
         public CreatePrjScrViewModel()
         {
-            PrjName = "New Project";
-            PrjPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             UpdateFullPath();
 
             CreatePrjCmd = new RelayCommand(CreateProject, CanCreateProject);

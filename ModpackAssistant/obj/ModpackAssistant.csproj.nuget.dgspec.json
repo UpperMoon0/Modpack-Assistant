@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Dev\\Workspace\\C_Sharp\\ModpackAssistant\\ModpackAssistant\\ModpackAssistant.csproj": {}
+    "D:\\Dev\\Workspace\\C_Sharp\\Modpack-Assistant\\ModpackAssistant\\ModpackAssistant.csproj": {}
   },
   "projects": {
-    "D:\\Dev\\Workspace\\C_Sharp\\ModpackAssistant\\ModpackAssistant\\ModpackAssistant.csproj": {
+    "D:\\Dev\\Workspace\\C_Sharp\\Modpack-Assistant\\ModpackAssistant\\ModpackAssistant.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Dev\\Workspace\\C_Sharp\\ModpackAssistant\\ModpackAssistant\\ModpackAssistant.csproj",
+        "projectUniqueName": "D:\\Dev\\Workspace\\C_Sharp\\Modpack-Assistant\\ModpackAssistant\\ModpackAssistant.csproj",
         "projectName": "ModpackAssistant",
-        "projectPath": "D:\\Dev\\Workspace\\C_Sharp\\ModpackAssistant\\ModpackAssistant\\ModpackAssistant.csproj",
+        "projectPath": "D:\\Dev\\Workspace\\C_Sharp\\Modpack-Assistant\\ModpackAssistant\\ModpackAssistant.csproj",
         "packagesPath": "C:\\Users\\vongu\\.nuget\\packages\\",
-        "outputPath": "D:\\Dev\\Workspace\\C_Sharp\\ModpackAssistant\\ModpackAssistant\\obj\\",
+        "outputPath": "D:\\Dev\\Workspace\\C_Sharp\\Modpack-Assistant\\ModpackAssistant\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\vongu\\AppData\\Roaming\\NuGet\\NuGet.Config",

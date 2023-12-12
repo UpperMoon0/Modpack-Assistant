@@ -5,8 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ModpackAssistant" 
         xmlns:view="clr-namespace:ModpackAssistant.View" 
-        xmlns:rScrView="clr-namespace:ModpackAssistant.View.RightScreen"
-        xmlns:rScrViewModel="clr-namespace:ModpackAssistant.ViewModel.RightScreen"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
@@ -20,16 +18,6 @@
 
         <view:TopBar Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
-        <view:TopBar Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <ContentControl Content="{Binding RightScreen}" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <ContentControl.Resources>
-                <DataTemplate DataType="{x:Type rScrViewModel:HomeScrViewModel}">
-                    <rScrView:HomeScr/>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type rScrViewModel:CreatePrjScrViewModel}">
-                    <rScrView:CreatePrjScr/>
-                </DataTemplate>
-            </ContentControl.Resources>
-        </ContentControl>
+        <ContentControl Content="{Binding RightScreen}" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
 </Window>

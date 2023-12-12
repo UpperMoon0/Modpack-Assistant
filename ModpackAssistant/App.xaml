@@ -1,9 +1,15 @@
 ﻿<Application x:Class="ModpackAssistant.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ModpackAssistant"
+             xmlns:rScrView="clr-namespace:ModpackAssistant.View.RightScreen"
+             xmlns:rScrViewModel="clr-namespace:ModpackAssistant.ViewModel.RightScreen"
              StartupUri="View/MainWindow.xaml">
     <Application.Resources>
-         
+        <DataTemplate DataType="{x:Type rScrViewModel:HomeScrViewModel}">
+            <rScrView:HomeScr/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type rScrViewModel:CreatePrjScrViewModel}">
+            <rScrView:CreatePrjScr/>
+        </DataTemplate>
     </Application.Resources>
 </Application>

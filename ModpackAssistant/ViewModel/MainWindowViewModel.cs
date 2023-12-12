@@ -1,15 +1,10 @@
 ﻿using ModpackAssistant.ViewModel.RightScreen;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModpackAssistant.ViewModel
 {
     internal class MainWindowViewModel : BaseViewModel
     {
-        private BaseViewModel _rightScreen;
+        private BaseViewModel _rightScreen = new HomeScrViewModel();
 
         public BaseViewModel RightScreen
         {
@@ -23,7 +18,6 @@ namespace ModpackAssistant.ViewModel
 
         public MainWindowViewModel()
         {
-            RightScreen = new HomeScrViewModel();
         }
     }
 }
