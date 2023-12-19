@@ -9,6 +9,7 @@
             prefHeight="800.0" prefWidth="600.0"
             stylesheets="@css/right-screen.css">
 
-    <Button fx:id="createButton" text="Create new project" layoutX="20" layoutY="20" />
+    <Button fx:id="loadButton" text="Open project" layoutX="20" layoutY="20" />
+    <Button fx:id="createButton" text="Create new project" layoutX="120" layoutY="20" />
 
 </AnchorPane>

@@ -12,9 +12,9 @@
             stylesheets="@css/right-screen.css">
 
     <Label fx:id="projectNameLabel" text="Project name:" layoutX="20" layoutY="20" />
-    <TextField fx:id="projectNameField" layoutX="20" layoutY="40" prefWidth="200" />
+    <TextField fx:id="projectNameField" layoutX="20" layoutY="40" prefWidth="300" />
     <Label fx:id="projectLocLabel" text="Project location:" layoutX="20" layoutY="70" />
-    <TextField fx:id="projectLocField" layoutX="20" layoutY="90" prefWidth="200" />
+    <TextField fx:id="projectLocField" layoutX="20" layoutY="90" prefWidth="300" />
     <Label fx:id="fullPathLabel" text="The full path will be:" layoutX="20" layoutY="120" />
     <Label fx:id="fullPath" text="NA" layoutX="130" layoutY="120" />
 

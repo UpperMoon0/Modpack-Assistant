@@ -1,20 +1,19 @@
 package com.nhat.modpackassistant.controller;
 
+import com.nhat.modpackassistant.model.Project;
 import com.nhat.modpackassistant.util.FileUtil;
 import com.nhat.modpackassistant.util.StringUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class CreatePrjController {
+public class CreatePrjController extends InitPrjController {
     @FXML
     private Label projectNameLabel;
 
@@ -37,10 +36,9 @@ public class CreatePrjController {
     private Button createButton;
 
     @FXML
-    private Button backButton;
-
-    @FXML
     public void initialize() {
+        super.initialize();
+
         ChangeListener<String> pathUpdater = (observable, oldValue, newValue) -> {
             String formattedProjectName = StringUtil.formatProjectName(projectNameField.getText());
             String projectLocation = projectLocField.getText();
@@ -55,31 +53,47 @@ public class CreatePrjController {
             String projectLocation = projectLocField.getText();
             String formattedProjectName = StringUtil.formatProjectName(projectNameField.getText());
 
-            if (FileUtil.pathExists(projectLocation)) {
-                try {
-                    // Create the project directory
-                    FileUtil.createDir(projectLocation, formattedProjectName);
+            switch (canCreate(projectLocation, formattedProjectName)) {
+                case 0:
+                    showErrorAlert("Error creating project", "Project name is empty.");
+                    break;
+                case 1:
+                    showErrorAlert("Error creating project", "Project location is empty.");
+                    break;
+                case 2:
+                    showErrorAlert("Error creating project", "Project location does not exist.");
+                    break;
+                case 3:
+                    try {
+                        // Create the project directory
+                        FileUtil.createDir(projectLocation, formattedProjectName);
+                        // Create the subdirectories
+                        String path = Paths.get(projectLocation, formattedProjectName).toString();
+                        FileUtil.createDir(path, "bounties");
+                        FileUtil.createDir(path, "items");
 
-                    // Create the "bounties" directory inside the project directory
-                    FileUtil.createDir(Paths.get(projectLocation, formattedProjectName).toString(), "bounties");
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
+                        // Load the "item-view.fxml" file
+                        loadView("/com/nhat/modpackassistant/item-view.fxml", createButton);
+
+                        // Set the project path
+                        Project.getInstance().setPath(path);
+                    } catch (IOException ioException) {
+                        showErrorAlert("Error creating project", "Could not create the project: " + formattedProjectName);
+                    }
+                    break;
             }
         });
+    }
 
-        backButton.setOnAction(e -> {
-            try {
-                // Load the "home-view.fxml" file
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nhat/modpackassistant/home-view.fxml"));
-                Stage stage = (Stage) backButton.getScene().getWindow();
-                double currentWidth = stage.getScene().getWidth();
-                double currentHeight = stage.getScene().getHeight();
-                Scene scene = new Scene(loader.load(), currentWidth, currentHeight);
-                stage.setScene(scene);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        });
+    private int canCreate(String projectLocation, String projectName) {
+        if (projectName.isEmpty()) {
+            return 0;
+        } else if (projectLocation.isEmpty()) {
+            return 1;
+        } else if (!FileUtil.pathExists(projectLocation)) {
+            return 2;
+        } else {
+            return 3;
+        }
     }
 }

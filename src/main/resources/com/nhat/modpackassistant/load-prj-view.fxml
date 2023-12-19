@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.nhat.modpackassistant.controller.LoadPrjController"
+            prefHeight="800.0" prefWidth="600.0"
+            stylesheets="@css/right-screen.css">
+
+    <Label fx:id="projectPathLabel" text="Project path:" layoutX="20" layoutY="20" />
+    <TextField fx:id="projectPathField" layoutX="20" layoutY="40" prefWidth="300" />
+
+    <Button fx:id="loadButton" text="Open" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="10" />
+    <Button fx:id="backButton" text="Back" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" />
+</AnchorPane>
