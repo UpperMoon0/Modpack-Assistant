@@ -2,10 +2,13 @@ package com.nhat.modpackassistant.controller;
 
 import com.nhat.modpackassistant.model.Project;
 import com.nhat.modpackassistant.util.FileUtil;
+import com.nhat.modpackassistant.util.ItemUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+
+import java.io.IOException;
 
 public class LoadPrjController extends InitPrjController {
     @FXML
@@ -37,6 +40,13 @@ public class LoadPrjController extends InitPrjController {
 
                     // Set the project path
                     Project.getInstance().setPath(projectPath);
+
+                    // Load items from JSON files
+                    try {
+                        ItemUtil.getInstance().loadItems();
+                    } catch (IOException ex) {
+                        showErrorAlert("Error loading items", "Could not load items from JSON files.");
+                    }
                     break;
             }
         });
