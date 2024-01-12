@@ -1,8 +1,12 @@
-package com.nhat.modpackassistant.controller;
+package com.nhat.modpackassistant.controller.bottom;
 
+import com.nhat.modpackassistant.controller.BaseController;
+import com.nhat.modpackassistant.model.BountyLevelStringConverter;
 import com.nhat.modpackassistant.model.Item;
 import com.nhat.modpackassistant.model.ItemList;
+import com.nhat.modpackassistant.util.ItemUtil;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -12,8 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
 
-import java.io.IOException;
-import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class ItemController extends BaseController {
@@ -25,9 +28,8 @@ public class ItemController extends BaseController {
     private TableColumn<Item, Integer> itemValueColumn;
     @FXML
     private TableColumn<Item, Integer> itemLevelColumn;
-    // String for adding multiple bounty levels separated by commas.
     @FXML
-    private TableColumn<Item, String> itemBountyLevelColumn;
+    private TableColumn<Item, Set<Integer>> itemBountyLevelColumn;
     @FXML
     private TextField itemIdField;
     @FXML
@@ -38,8 +40,6 @@ public class ItemController extends BaseController {
     private TextField itemBountyLevelField;
     @FXML
     private Button addButton;
-    @FXML
-    private Button saveButton;
     @FXML
     private Button removeButton;
 
@@ -55,25 +55,19 @@ public class ItemController extends BaseController {
         itemIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         itemValueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
         itemLevelColumn.setCellValueFactory(new PropertyValueFactory<>("level"));
-        itemBountyLevelColumn.setCellValueFactory(new PropertyValueFactory<>("bountyLevelsString"));
+        itemBountyLevelColumn.setCellValueFactory(new PropertyValueFactory<>("bountyLevels"));
 
         // Set up a cell factory to allow editing of the cells.
         itemIdColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         itemValueColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         itemLevelColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        itemBountyLevelColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        itemBountyLevelColumn.setCellFactory(TextFieldTableCell.forTableColumn(new BountyLevelStringConverter()));
 
         // Handle the editCommit event to update the item when the cell is edited.
         itemIdColumn.setOnEditCommit(event -> event.getRowValue().setId(event.getNewValue()));
         itemValueColumn.setOnEditCommit(event -> event.getRowValue().setValue(event.getNewValue()));
         itemLevelColumn.setOnEditCommit(event -> event.getRowValue().setLevel(event.getNewValue()));
-        itemBountyLevelColumn.setOnEditCommit(event -> {
-            Set<Integer> bountyLevels = new HashSet<>();
-            for (String bountyLevel : event.getNewValue().split(",")) {
-                bountyLevels.add(Integer.parseInt(bountyLevel.trim()));
-            }
-            event.getRowValue().setBountyLevels(bountyLevels);
-        });
+        itemBountyLevelColumn.setOnEditCommit(event -> event.getRowValue().setBountyLevels(event.getNewValue()));
 
         // Bind the prefWidthProperty of each TableColumn to a percentage of the TableView's width.
         itemIdColumn.prefWidthProperty().bind(itemTable.widthProperty().multiply(0.45));
@@ -81,29 +75,23 @@ public class ItemController extends BaseController {
         itemLevelColumn.prefWidthProperty().bind(itemTable.widthProperty().multiply(0.15));
         itemBountyLevelColumn.prefWidthProperty().bind(itemTable.widthProperty().multiply(0.25));
 
-        // Add a listener to the textProperty of the itemLevelField to update the itemBountyLevelField text.
-        itemLevelField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.equals(itemBountyLevelField.getText())) {
-                itemBountyLevelField.setText(newValue);
-            }
-        });
+        // Add a listener to the textProperty of the itemValueField and itemLevelField to update the text fill color.
+        ItemUtil itemUtil = ItemUtil.getInstance();
+        setTextFillBasedOnValidity(itemValueField, itemUtil::valueValid);
+        setTextFillBasedOnValidity(itemLevelField, itemUtil::levelValid);
+        setTextFillBasedOnValidity(itemBountyLevelField, itemUtil::bountyLevelsValid);
 
         // Set the action of the addButton to call the addItem method and clear the input fields.
         addButton.setOnAction(e -> {
-            try {
+            if (!ItemUtil.getInstance().valueValid(itemValueField.getText())) {
+                showErrorAlert("Error adding item", "Item value must be a positive integer.");
+            } else if (!ItemUtil.getInstance().levelValid(itemLevelField.getText())) {
+                showErrorAlert("Error adding item", "Item level must be a positive integer and less than or equal to the max level.");
+            } else if (!ItemUtil.getInstance().bountyLevelsValid(itemBountyLevelField.getText())) {
+                showErrorAlert("Error adding item", "Bounty levels must be positive integer(s).");
+            } else {
                 addItem();
                 clearFields();
-            } catch (NumberFormatException ex) {
-                showErrorAlert("Input Error", "Input values must be integers.");
-            }
-        });
-
-        // Set the action of the saveButton to call the saveItems method.
-        saveButton.setOnAction(e -> {
-            try {
-                com.nhat.modpackassistant.util.ItemUtil.getInstance().saveItems();
-            } catch (IOException ex) {
-                showErrorAlert("Error saving items", "Could not save items to JSON files.");
             }
         });
 
@@ -115,29 +103,21 @@ public class ItemController extends BaseController {
     }
 
     private void addItem() {
+        String itemId = itemIdField.getText();
         int itemValue = Integer.parseInt(itemValueField.getText());
         int itemLevel = Integer.parseInt(itemLevelField.getText());
+        Set<Integer> itemBountyLevels = ItemUtil.getInstance().parseBountyLevels(itemBountyLevelField.getText());
 
-        Item item = new Item(
-                itemIdField.getText(),
-                itemValue,
-                itemLevel
-        );
-
-        String[] bountyLevels = itemBountyLevelField.getText().split(",");
-        for (String bountyLevel : bountyLevels) {
-            item.addBountyLevel(Integer.parseInt(bountyLevel.trim()));
-        }
-
+        Item item = new Item(itemId, itemValue, itemLevel, itemBountyLevels);
         ItemList.getInstance().addItem(item);
     }
 
     private void removeItem() {
-        Item selectedItem = itemTable.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            ItemList.getInstance().removeItem(selectedItem);
-            items.remove(selectedItem);
-        }
+        Optional.ofNullable(itemTable.getSelectionModel().getSelectedItem())
+                .ifPresent(selectedItem -> {
+                    ItemList.getInstance().removeItem(selectedItem);
+                    items.remove(selectedItem);
+                });
     }
 
     private void clearFields() {

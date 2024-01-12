@@ -5,9 +5,8 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.nhat.modpackassistant.controller.LoadPrjController"
-            prefHeight="800.0" prefWidth="600.0"
-            stylesheets="@css/right-screen.css">
+            fx:controller="com.nhat.modpackassistant.controller.bottom.LoadPrjController"
+            prefHeight="800.0" prefWidth="600.0">
 
     <Label fx:id="projectPathLabel" text="Project path:" layoutX="20" layoutY="20" />
     <TextField fx:id="projectPathField" layoutX="20" layoutY="40" prefWidth="300" />

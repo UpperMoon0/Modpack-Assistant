@@ -1,4 +1,4 @@
-package com.nhat.modpackassistant.controller;
+package com.nhat.modpackassistant.controller.bottom;
 
 import com.nhat.modpackassistant.model.Project;
 import com.nhat.modpackassistant.util.FileUtil;
@@ -71,8 +71,9 @@ public class CreatePrjController extends InitPrjController {
                         FileUtil.createDir(path, "bounties");
                         FileUtil.createDir(path, "items");
 
-                        // Load the "item-view.fxml" file
-                        loadView("/com/nhat/modpackassistant/item-view.fxml", createButton);
+                        // Load the bottom view and top view
+                        loadTopView("/com/nhat/modpackassistant/top-bar-bh-view.fxml", createButton);
+                        loadBottomView("/com/nhat/modpackassistant/item-view.fxml", createButton);
 
                         // Set the project path
                         Project.getInstance().setPath(path);

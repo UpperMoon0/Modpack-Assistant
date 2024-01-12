@@ -1,8 +1,9 @@
-package com.nhat.modpackassistant.controller;
+package com.nhat.modpackassistant.controller.bottom;
 
 import com.nhat.modpackassistant.model.Project;
 import com.nhat.modpackassistant.util.FileUtil;
 import com.nhat.modpackassistant.util.ItemUtil;
+import com.nhat.modpackassistant.util.LevelUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -35,8 +36,9 @@ public class LoadPrjController extends InitPrjController {
                     showErrorAlert("Error loading project", "Project path does not exist.");
                     break;
                 case 2:
-                    // Load the "item-view.fxml" file
-                    loadView("/com/nhat/modpackassistant/item-view.fxml", loadButton);
+                    // Load the bottom view and top view
+                    loadTopView("/com/nhat/modpackassistant/top-bar-bh-view.fxml", loadButton);
+                    loadBottomView("/com/nhat/modpackassistant/item-view.fxml", loadButton);
 
                     // Set the project path
                     Project.getInstance().setPath(projectPath);
@@ -46,6 +48,13 @@ public class LoadPrjController extends InitPrjController {
                         ItemUtil.getInstance().loadItems();
                     } catch (IOException ex) {
                         showErrorAlert("Error loading items", "Could not load items from JSON files.");
+                    }
+
+                    // Load levels from JSON file
+                    try {
+                        LevelUtil.getInstance().loadLevels();
+                    } catch (IOException ex) {
+                        showErrorAlert("Error loading levels", "Could not load levels from JSON file.");
                     }
                     break;
             }

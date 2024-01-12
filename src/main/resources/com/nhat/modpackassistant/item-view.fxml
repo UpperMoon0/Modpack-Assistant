@@ -5,9 +5,8 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.nhat.modpackassistant.controller.ItemController"
-            prefHeight="800.0" prefWidth="600.0"
-            stylesheets="@css/right-screen.css">
+            fx:controller="com.nhat.modpackassistant.controller.bottom.ItemController"
+            prefHeight="800.0" prefWidth="600.0">
 
     <Label text="Item id:" layoutX="20" layoutY="20" />
     <TextField fx:id="itemIdField" layoutX="20" layoutY="40" prefWidth="150" />
@@ -28,6 +27,5 @@
         </columns>
     </TableView>
 
-    <Button fx:id="saveButton" text="Save" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="10"/>
     <Button fx:id="removeButton" text="Remove" layoutX="635" layoutY="20"/>
 </AnchorPane>

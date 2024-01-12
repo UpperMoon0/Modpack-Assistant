@@ -6,4 +6,6 @@ module com.nhat.modpackassistant {
     opens com.nhat.modpackassistant.controller to javafx.fxml;
     opens com.nhat.modpackassistant.model to javafx.base, com.fasterxml.jackson.databind;
     exports com.nhat.modpackassistant;
+    opens com.nhat.modpackassistant.controller.bottom to javafx.fxml;
+    opens com.nhat.modpackassistant.controller.top to javafx.fxml;
 }

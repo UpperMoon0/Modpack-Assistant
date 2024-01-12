@@ -15,11 +15,11 @@ public class Item {
         bountyLevels = new HashSet<>();
     }
 
-    public Item(String id, int value, int level) {
+    public Item(String id, int value, int level, Set<Integer> bountyLevels) {
         this.id = id;
         this.value = value;
         this.level = level;
-        this.bountyLevels = new HashSet<>();
+        this.bountyLevels = bountyLevels;
     }
 
     public String getId() {
@@ -38,17 +38,8 @@ public class Item {
         return bountyLevels;
     }
 
-    public void addBountyLevel(int bountyLevel) {
-        this.bountyLevels.add(bountyLevel);
-    }
-
     public void removeBountyLevel(int bountyLevel) {
         this.bountyLevels.remove(bountyLevel);
-    }
-
-    @JsonIgnore
-    public String getBountyLevelsString() {
-        return bountyLevels.toString();
     }
 
     public void setId(String id) {

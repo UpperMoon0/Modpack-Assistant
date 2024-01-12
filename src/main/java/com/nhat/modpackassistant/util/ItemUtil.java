@@ -3,12 +3,14 @@ package com.nhat.modpackassistant.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhat.modpackassistant.model.Item;
 import com.nhat.modpackassistant.model.ItemList;
+import com.nhat.modpackassistant.model.MaxLevel;
 import com.nhat.modpackassistant.model.Project;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class ItemUtil {
@@ -21,7 +23,7 @@ public class ItemUtil {
 
     public static ItemUtil getInstance() {
         if (instance == null) {
-            instance = new com.nhat.modpackassistant.util.ItemUtil();
+            instance = new ItemUtil();
         }
         return instance;
     }
@@ -61,5 +63,45 @@ public class ItemUtil {
         } catch (IOException ex) {
             System.err.println("Error listing files in directory: " + itemsDir);
         }
+    }
+
+    public boolean valueValid(String value) {
+        if (StringUtil.isInteger(value)) {
+            return Integer.parseInt(value) > 0;
+        }
+        return false;
+    }
+
+    public boolean levelValid(String level) {
+        if (StringUtil.isInteger(level)) {
+            int parsedLevel = Integer.parseInt(level);
+            return parsedLevel > 0 && parsedLevel <= MaxLevel.getInstance().getLevel();
+        }
+        return false;
+    }
+
+    public Set<Integer> parseBountyLevels(String bountyLevels) {
+        if (!bountyLevelsValid(bountyLevels)) {
+            return new java.util.HashSet<>(Set.of());
+        }
+
+        String[] splitBountyLevels = bountyLevels.split(",");
+        Set<Integer> convertedBountyLevels = new java.util.HashSet<>(Set.of());
+
+        for (String bountyLevel : splitBountyLevels) {
+            convertedBountyLevels.add(Integer.parseInt(bountyLevel.trim()));
+        }
+
+        return convertedBountyLevels;
+    }
+
+    public boolean bountyLevelsValid(String bountyLevels) {
+        String[] splitBountyLevels = bountyLevels.split(",");
+        for (String bountyLevel : splitBountyLevels) {
+            if (!StringUtil.isInteger(bountyLevel.trim())) {
+                return false;
+            }
+        }
+        return true;
     }
 }
