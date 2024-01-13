@@ -22,7 +22,7 @@ public class LevelUtil {
         return instance;
     }
 
-    public void saveLevels() throws IOException {
+    public void saveLevel() throws IOException {
         objectMapper.writeValue(Paths.get(Project.getInstance().getPath(), "levels.json").toFile(), MaxLevel.getInstance().getLevel());
     }
 

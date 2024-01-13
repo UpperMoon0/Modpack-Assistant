@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.nhat.modpackassistant.controller.bottom.BountyController">
+    <Label text="Bounty level:" layoutX="20" layoutY="20" />
+    <TextField fx:id="bountyLevelField" layoutX="20" layoutY="40" prefWidth="150" />
+    <Label text="Minimum value:" layoutX="20" layoutY="70" />
+    <TextField fx:id="minValueField" layoutX="20" layoutY="90" prefWidth="150" />
+    <Label text="Maximum value:" layoutX="20" layoutY="120" />
+    <TextField fx:id="maxValueField" layoutX="20" layoutY="140" prefWidth="150" />
+    <Button fx:id="addButton" text="Add" layoutX="20" layoutY="230" />
+
+    <TableView fx:id="itemTable" layoutX="220" layoutY="20" prefHeight="200" prefWidth="400">
+        <columns>
+            <TableColumn fx:id="bountyLevelColumn" text="ID"/>
+            <TableColumn fx:id="minValueColumn" text="Min value"/>
+            <TableColumn fx:id="maxValueColumn" text="Max value"/>
+        </columns>
+    </TableView>
+
+    <Button fx:id="removeButton" text="Remove" layoutX="635" layoutY="20"/>
+
+</AnchorPane>

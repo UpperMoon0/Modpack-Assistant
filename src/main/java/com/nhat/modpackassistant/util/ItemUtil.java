@@ -13,14 +13,24 @@ import java.nio.file.Paths;
 import java.util.Set;
 import java.util.stream.Stream;
 
+/**
+ * Utility class for handling operations related to Items.
+ */
 public class ItemUtil {
     private static com.nhat.modpackassistant.util.ItemUtil instance;
     private final ObjectMapper mapper;
 
+    /**
+     * Private constructor to enforce singleton pattern.
+     */
     private ItemUtil() {
         this.mapper = new ObjectMapper();
     }
 
+    /**
+     * Returns the singleton instance of ItemUtil.
+     * @return the singleton instance of ItemUtil.
+     */
     public static ItemUtil getInstance() {
         if (instance == null) {
             instance = new ItemUtil();
@@ -28,6 +38,10 @@ public class ItemUtil {
         return instance;
     }
 
+    /**
+     * Saves all items to disk.
+     * @throws IOException if an I/O error occurs.
+     */
     public void saveItems() throws IOException {
         String projectPath = Project.getInstance().getPath();
         Path itemsDir = Paths.get(projectPath, "items");
@@ -35,7 +49,6 @@ public class ItemUtil {
         if (!FileUtil.pathExists(itemsDir.toString())) {
             FileUtil.createDir(projectPath, "items");
         } else {
-            // Delete all files in the directory
             FileUtil.deleteAllFilesInDir(itemsDir.toString());
         }
 
@@ -47,6 +60,10 @@ public class ItemUtil {
         }
     }
 
+    /**
+     * Loads all items from disk.
+     * @throws IOException if an I/O error occurs.
+     */
     public void loadItems() throws IOException {
         String projectPath = Project.getInstance().getPath();
         Path itemsDir = Paths.get(projectPath, "items");
@@ -65,6 +82,11 @@ public class ItemUtil {
         }
     }
 
+    /**
+     * Checks if a value is valid.
+     * @param value the value to check.
+     * @return true if the value is valid, false otherwise.
+     */
     public boolean valueValid(String value) {
         if (StringUtil.isInteger(value)) {
             return Integer.parseInt(value) > 0;
@@ -72,6 +94,11 @@ public class ItemUtil {
         return false;
     }
 
+    /**
+     * Checks if a level is valid.
+     * @param level the level to check.
+     * @return true if the level is valid, false otherwise.
+     */
     public boolean levelValid(String level) {
         if (StringUtil.isInteger(level)) {
             int parsedLevel = Integer.parseInt(level);
@@ -80,6 +107,11 @@ public class ItemUtil {
         return false;
     }
 
+    /**
+     * Parses bounty levels from a string.
+     * @param bountyLevels the string to parse.
+     * @return a set of parsed bounty levels.
+     */
     public Set<Integer> parseBountyLevels(String bountyLevels) {
         if (!bountyLevelsValid(bountyLevels)) {
             return new java.util.HashSet<>(Set.of());
@@ -95,6 +127,11 @@ public class ItemUtil {
         return convertedBountyLevels;
     }
 
+    /**
+     * Checks if bounty levels are valid.
+     * @param bountyLevels the bounty levels to check.
+     * @return true if the bounty levels are valid, false otherwise.
+     */
     public boolean bountyLevelsValid(String bountyLevels) {
         String[] splitBountyLevels = bountyLevels.split(",");
         for (String bountyLevel : splitBountyLevels) {

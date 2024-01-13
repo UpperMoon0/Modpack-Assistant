@@ -6,7 +6,6 @@ import com.nhat.modpackassistant.model.Item;
 import com.nhat.modpackassistant.model.ItemList;
 import com.nhat.modpackassistant.util.ItemUtil;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -19,6 +18,10 @@ import javafx.util.converter.IntegerStringConverter;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Controller for the Item view.
+ * Handles the interaction between the Item model and the Item view.
+ */
 public class ItemController extends BaseController {
     @FXML
     private TableView<Item> itemTable;
@@ -45,10 +48,15 @@ public class ItemController extends BaseController {
 
     private ObservableList<Item> items;
 
+    /**
+     * Initializes the ItemController.
+     * Sets up the TableView and its columns, and the actions of the buttons.
+     */
     @FXML
     public void initialize() {
         // Get the ObservableList of items from the ItemList singleton.
         items = ItemList.getInstance().getItems();
+        // Set the items to the TableView.
         itemTable.setItems(items);
 
         // Set up the cell value factories for the TableView columns.
@@ -102,17 +110,26 @@ public class ItemController extends BaseController {
         itemTable.setEditable(true);
     }
 
+    /**
+     * Adds a new item to the ItemList.
+     * The item is created using the text from the input fields.
+     */
     private void addItem() {
         String itemId = itemIdField.getText();
         int itemValue = Integer.parseInt(itemValueField.getText());
         int itemLevel = Integer.parseInt(itemLevelField.getText());
         Set<Integer> itemBountyLevels = ItemUtil.getInstance().parseBountyLevels(itemBountyLevelField.getText());
 
+        // Create a new Item and add it to the ItemList.
         Item item = new Item(itemId, itemValue, itemLevel, itemBountyLevels);
         ItemList.getInstance().addItem(item);
     }
 
+    /**
+     * Removes the selected item from the ItemList.
+     */
     private void removeItem() {
+        // Get the selected item and remove it from the ItemList and the ObservableList.
         Optional.ofNullable(itemTable.getSelectionModel().getSelectedItem())
                 .ifPresent(selectedItem -> {
                     ItemList.getInstance().removeItem(selectedItem);
@@ -120,6 +137,9 @@ public class ItemController extends BaseController {
                 });
     }
 
+    /**
+     * Clears the text from the input fields.
+     */
     private void clearFields() {
         itemIdField.clear();
         itemValueField.clear();

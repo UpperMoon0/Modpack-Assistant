@@ -40,9 +40,9 @@ public class TopBarBHController extends BaseController {
         }
 
         try {
-            com.nhat.modpackassistant.util.LevelUtil.getInstance().saveLevels();
+            com.nhat.modpackassistant.util.LevelUtil.getInstance().saveLevel();
         } catch (IOException ex) {
-            showErrorAlert("Error saving items", "Could not save items to JSON files.");
+            showErrorAlert("Error saving items", "Could not save level to JSON files.");
         }
     }
 }
