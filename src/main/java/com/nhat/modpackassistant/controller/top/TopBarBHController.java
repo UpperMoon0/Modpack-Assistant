@@ -29,6 +29,7 @@ public class TopBarBHController extends BaseController {
 
         itemsButton.setOnAction(e -> loadBottomView("/com/nhat/modpackassistant/item-view.fxml", itemsButton));
         levelsButton.setOnAction(e -> loadBottomView("/com/nhat/modpackassistant/level-view.fxml", levelsButton));
+        bountiesButton.setOnAction(e -> loadBottomView("/com/nhat/modpackassistant/bounty-view.fxml", bountiesButton));
         saveButton.setOnAction(e -> save());
     }
 

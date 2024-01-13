@@ -13,6 +13,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
 
+import java.util.Optional;
+import java.util.Set;
+
 public class BountyController extends BaseController {
     @FXML
     private TableView<Bounty> itemTable;
@@ -62,24 +65,34 @@ public class BountyController extends BaseController {
         minValueColumn.prefWidthProperty().bind(itemTable.widthProperty().multiply(0.35));
         maxValueColumn.prefWidthProperty().bind(itemTable.widthProperty().multiply(0.35));
 
-        // Add a listener to the textProperty of the itemValueField and itemLevelField to update the text fill color.
-        ItemUtil itemUtil = ItemUtil.getInstance();
-        setTextFillBasedOnValidity(itemValueField, itemUtil::valueValid);
-        setTextFillBasedOnValidity(itemLevelField, itemUtil::levelValid);
-        setTextFillBasedOnValidity(itemBountyLevelField, itemUtil::bountyLevelsValid);
-
         // Set the action of the addButton to call the addItem method and clear the input fields.
         addButton.setOnAction(e -> {
-            if (!ItemUtil.getInstance().valueValid(itemValueField.getText())) {
-                showErrorAlert("Error adding item", "Item value must be a positive integer.");
-            } else if (!ItemUtil.getInstance().levelValid(itemLevelField.getText())) {
-                showErrorAlert("Error adding item", "Item level must be a positive integer and less than or equal to the max level.");
-            } else if (!ItemUtil.getInstance().bountyLevelsValid(itemBountyLevelField.getText())) {
-                showErrorAlert("Error adding item", "Bounty levels must be positive integer(s).");
-            } else {
-                addItem();
-                clearFields();
-            }
+            addBounty();
+            clearFields();
         });
+    }
+
+    private void addBounty() {
+        int bountyLevel = Integer.parseInt(bountyLevelField.getText());
+        int itemValue = Integer.parseInt(minValueField.getText());
+        int itemLevel = Integer.parseInt(maxValueField.getText());
+
+        Bounty bounty = new Bounty(bountyLevel, itemValue, itemLevel);
+        BountyList.getInstance().addBounty(bounty);
+    }
+
+    private void removeItem() {
+        // Get the selected item and remove it from the ItemList and the ObservableList.
+        Optional.ofNullable(itemTable.getSelectionModel().getSelectedItem())
+            .ifPresent(selectedItem -> {
+                BountyList.getInstance().removeBounty(selectedItem);
+                bounties.remove(selectedItem);
+        });
+    }
+
+    private void clearFields() {
+        bountyLevelField.clear();
+        minValueField.clear();
+        maxValueField.clear();
     }
 }
