@@ -20,9 +20,11 @@ public class BountyList {
 
     public void addBounty(Bounty bounty) {
         if (bounties == null) {
+            System.out.println("bounties is null");
             return;
         }
 
+        System.out.println("bounties is not null" + bounty.toString());
         bounties.add(bounty);
     }
 

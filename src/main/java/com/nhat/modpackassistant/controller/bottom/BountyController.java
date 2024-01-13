@@ -74,10 +74,12 @@ public class BountyController extends BaseController {
 
     private void addBounty() {
         int bountyLevel = Integer.parseInt(bountyLevelField.getText());
-        int itemValue = Integer.parseInt(minValueField.getText());
-        int itemLevel = Integer.parseInt(maxValueField.getText());
+        int minValue = Integer.parseInt(minValueField.getText());
+        int maxValue = Integer.parseInt(maxValueField.getText());
 
-        Bounty bounty = new Bounty(bountyLevel, itemValue, itemLevel);
+        Bounty bounty = new Bounty(bountyLevel, minValue, maxValue);
+        System.out.println("Bounty added " + bounty.getLevel() + " " + bounty.getMinValue() + " " + bounty.getMaxValue());
+        System.out.println("Is bounty null? " + (bounty == null));
         BountyList.getInstance().addBounty(bounty);
     }
 
