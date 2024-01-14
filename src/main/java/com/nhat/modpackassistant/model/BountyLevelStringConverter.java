@@ -1,6 +1,5 @@
 package com.nhat.modpackassistant.model;
 
-import com.nhat.modpackassistant.util.ItemUtil;
 import javafx.util.StringConverter;
 
 import java.util.Set;
@@ -19,10 +18,10 @@ public class BountyLevelStringConverter extends StringConverter<Set<Integer>> {
 
     @Override
     public Set<Integer> fromString(String s) {
-        if (!ItemUtil.getInstance().bountyLevelsValid(s)) {
+        if (!Bounties.isValidBountyLevels(s)) {
             return null;
         }
 
-        return ItemUtil.getInstance().parseBountyLevels(s);
+        return Bounties.parseBountyLevels(s);
     }
 }

@@ -1,15 +1,17 @@
 package com.nhat.modpackassistant.controller.bottom;
 
+import com.nhat.modpackassistant.model.Bounties;
+import com.nhat.modpackassistant.model.Items;
+import com.nhat.modpackassistant.model.MaxLevel;
 import com.nhat.modpackassistant.model.Project;
-import com.nhat.modpackassistant.util.FileUtil;
-import com.nhat.modpackassistant.util.ItemUtil;
-import com.nhat.modpackassistant.util.LevelUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class LoadPrjController extends InitPrjController {
     @FXML
@@ -45,17 +47,26 @@ public class LoadPrjController extends InitPrjController {
 
                     // Load items from JSON files
                     try {
-                        ItemUtil.getInstance().loadItems();
+                        Items.loadItems();
                     } catch (IOException ex) {
                         showErrorAlert("Error loading items", "Could not load items from JSON files.");
                     }
 
                     // Load levels from JSON file
                     try {
-                        LevelUtil.getInstance().loadLevels();
+                        MaxLevel.loadLevels();
                     } catch (IOException ex) {
                         showErrorAlert("Error loading levels", "Could not load levels from JSON file.");
                     }
+
+                    // Load bounties from JSON file
+                    try {
+                        Bounties.loadBounties();
+                    } catch (IOException ex) {
+                        showErrorAlert("Error loading bounties", "Could not load bounties from JSON file.");
+                        ex.printStackTrace();
+                    }
+
                     break;
             }
         });
@@ -65,7 +76,7 @@ public class LoadPrjController extends InitPrjController {
         String projectPath = projectPathField.getText();
         if (projectPath.isEmpty()) {
             return 0;
-        } else if (!FileUtil.pathExists(projectPath)) {
+        } else if (!Files.exists(Paths.get(projectPath))) {
             return 1;
         } else {
             return 2;

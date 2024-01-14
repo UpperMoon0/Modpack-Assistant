@@ -14,5 +14,6 @@
         <Button fx:id="levelsButton" text="Levels" />
         <Button fx:id="bountiesButton" text="Bounties" />
         <Button fx:id="saveButton" text="Save" />
+        <Button fx:id="exportButton" text="Export" />
     </HBox>
 </AnchorPane>

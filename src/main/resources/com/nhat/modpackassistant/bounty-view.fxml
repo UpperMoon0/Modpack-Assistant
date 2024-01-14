@@ -14,9 +14,9 @@
     <TextField fx:id="maxValueField" layoutX="20" layoutY="140" prefWidth="150" />
     <Button fx:id="addButton" text="Add" layoutX="20" layoutY="230" />
 
-    <TableView fx:id="itemTable" layoutX="220" layoutY="20" prefHeight="200" prefWidth="400">
+    <TableView fx:id="bountyTable" layoutX="220" layoutY="20" prefHeight="200" prefWidth="400">
         <columns>
-            <TableColumn fx:id="bountyLevelColumn" text="ID"/>
+            <TableColumn fx:id="bountyLevelColumn" text="Bounty level"/>
             <TableColumn fx:id="minValueColumn" text="Min value"/>
             <TableColumn fx:id="maxValueColumn" text="Max value"/>
         </columns>

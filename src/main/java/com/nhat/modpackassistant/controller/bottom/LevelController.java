@@ -2,8 +2,6 @@ package com.nhat.modpackassistant.controller.bottom;
 
 import com.nhat.modpackassistant.controller.BaseController;
 import com.nhat.modpackassistant.model.MaxLevel;
-import com.nhat.modpackassistant.util.LevelUtil;
-import com.nhat.modpackassistant.util.StringUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -18,7 +16,7 @@ public class LevelController extends BaseController {
 
         // Add a listener to the textProperty of the maxLevelField to update the text fill color and the MaxLevel singleton.
         maxLevelField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (LevelUtil.getInstance().levelValid(newValue)) {
+            if (newValue.matches("\\d+") && Integer.parseInt(newValue) > 0) {
                 maxLevelField.setStyle("-fx-text-fill: white;");
                 MaxLevel.getInstance().setLevel(Integer.parseInt(newValue));
             } else {

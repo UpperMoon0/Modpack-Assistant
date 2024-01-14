@@ -1,7 +1,6 @@
 package com.nhat.modpackassistant.controller.bottom;
 
 import com.nhat.modpackassistant.model.Project;
-import com.nhat.modpackassistant.util.FileUtil;
 import com.nhat.modpackassistant.util.StringUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -10,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class CreatePrjController extends InitPrjController {
@@ -65,11 +65,11 @@ public class CreatePrjController extends InitPrjController {
                 case 3:
                     try {
                         // Create the project directory
-                        FileUtil.createDir(projectLocation, formattedProjectName);
+                        Files.createDirectories(Paths.get(projectLocation, formattedProjectName));
                         // Create the subdirectories
                         String path = Paths.get(projectLocation, formattedProjectName).toString();
-                        FileUtil.createDir(path, "bounties");
-                        FileUtil.createDir(path, "items");
+                        Files.createDirectories(Paths.get(path, "bounties"));
+                        Files.createDirectories(Paths.get(path, "items"));
 
                         // Load the bottom view and top view
                         loadTopView("/com/nhat/modpackassistant/top-bar-bh-view.fxml", createButton);
@@ -90,7 +90,7 @@ public class CreatePrjController extends InitPrjController {
             return 0;
         } else if (projectLocation.isEmpty()) {
             return 1;
-        } else if (!FileUtil.pathExists(projectLocation)) {
+        } else if (!Files.exists(Paths.get(projectLocation))) {
             return 2;
         } else {
             return 3;
