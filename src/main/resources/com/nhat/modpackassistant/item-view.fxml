@@ -9,16 +9,18 @@
             prefHeight="800.0" prefWidth="600.0">
 
     <Label text="Item id:" layoutX="20" layoutY="20" />
-    <TextField fx:id="itemIdField" layoutX="20" layoutY="40" prefWidth="150" />
+    <TextField fx:id="idField" layoutX="20" layoutY="40" prefWidth="150" />
     <Label text="Item value:" layoutX="20" layoutY="70" />
-    <TextField fx:id="itemValueField" layoutX="20" layoutY="90" prefWidth="150" />
+    <TextField fx:id="valueField" layoutX="20" layoutY="90" prefWidth="150" />
     <Label text="Item level:" layoutX="20" layoutY="120" />
-    <TextField fx:id="itemLevelField" layoutX="20" layoutY="140" prefWidth="150" />
+    <TextField fx:id="levelField" layoutX="20" layoutY="140" prefWidth="150" />
     <Label text="Item bounty level:" layoutX="20" layoutY="170" />
-    <TextField fx:id="itemBountyLevelField" layoutX="20" layoutY="190" prefWidth="150" />
+    <TextField fx:id="bountyLevelField" layoutX="20" layoutY="190" prefWidth="150" />
     <Label text="Need research:" layoutX="20" layoutY="220" />
     <CheckBox fx:id="needResearchCheckBox" layoutX="105" layoutY="220" />
-    <Button fx:id="addButton" text="Add" layoutX="20" layoutY="250" />
+    <Label text="Explicit research level:" layoutX="20" layoutY="240" />
+    <TextField fx:id="researchLevelField" layoutX="20" layoutY="260" prefWidth="150" />
+    <Button fx:id="addButton" text="Add" layoutX="20" layoutY="300" />
 
     <TableView fx:id="itemTable" layoutX="200" layoutY="40" prefWidth="500">
         <columns>
@@ -26,7 +28,7 @@
             <TableColumn fx:id="itemValueColumn" text="Value"/>
             <TableColumn fx:id="itemLevelColumn" text="Level"/>
             <TableColumn fx:id="itemBountyLevelColumn" text="Bounty Level"/>
-            <TableColumn fx:id="needResearchColumn" text="Research"/>
+            <TableColumn fx:id="researchLevelColumn" text="Research"/>
         </columns>
     </TableView>
 

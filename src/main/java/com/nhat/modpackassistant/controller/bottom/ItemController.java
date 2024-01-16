@@ -2,7 +2,6 @@ package com.nhat.modpackassistant.controller.bottom;
 
 import com.nhat.modpackassistant.controller.BaseController;
 import com.nhat.modpackassistant.model.*;
-import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -33,17 +32,19 @@ public class ItemController extends BaseController {
     @FXML
     private TableColumn<Item, Set<Integer>> itemBountyLevelColumn;
     @FXML
-    private TableColumn<Item, Boolean> needResearchColumn;
+    private TableColumn<Item, String> researchLevelColumn;
     @FXML
-    private TextField itemIdField;
+    private TextField idField;
     @FXML
-    private TextField itemValueField;
+    private TextField valueField;
     @FXML
-    private TextField itemLevelField;
+    private TextField levelField;
     @FXML
-    private TextField itemBountyLevelField;
+    private TextField bountyLevelField;
     @FXML
     private CheckBox needResearchCheckBox;
+    @FXML
+    private TextField researchLevelField;
     @FXML
     private Button addButton;
     @FXML
@@ -67,48 +68,49 @@ public class ItemController extends BaseController {
         itemTable.prefHeightProperty().bind(root.heightProperty().multiply(0.8));
 
         // Set the text of the input fields to default values.
-        itemIdField.setText("item");
-        itemValueField.setText("1");
-        itemLevelField.setText("1");
-        itemBountyLevelField.setText("");
+        idField.setText("item");
+        valueField.setText("1");
+        levelField.setText("1");
+        bountyLevelField.setText("");
+        researchLevelField.setText("");
 
-        // Add a change listener to the textProperty of the itemIdField to only allow the specified format.
-        itemIdField.textProperty().addListener((observable, oldValue, newValue) -> itemIdField.setStyle(!newValue.isEmpty() ? "-fx-text-fill: white;" : "-fx-text-fill: red;"));
+        // Add a change listener to the textProperty of the idField to only allow the specified format.
+        idField.textProperty().addListener((observable, oldValue, newValue) -> idField.setStyle(!newValue.isEmpty() ? "-fx-text-fill: white;" : "-fx-text-fill: red;"));
 
-        // Add a focus change listener to the itemIdField to set the text back to "item" if it's invalid.
-        itemIdField.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
-            if (wasFocused && !isNowFocused && itemIdField.getText().isEmpty()) {
-                itemIdField.setText("item");
+        // Add a focus change listener to the idField to set the text back to "item" if it's invalid.
+        idField.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
+            if (wasFocused && !isNowFocused && idField.getText().isEmpty()) {
+                idField.setText("item");
             }
         });
 
-        // Add a change listener to the textProperty of the itemValueField to only allow positive integers.
-        itemValueField.textProperty().addListener((observable, oldValue, newValue) -> itemValueField.setStyle(isPositiveInteger(newValue) ? "-fx-text-fill: white;" : "-fx-text-fill: red;"));
+        // Add a change listener to the textProperty of the valueField to only allow positive integers.
+        valueField.textProperty().addListener((observable, oldValue, newValue) -> valueField.setStyle(isPositiveInteger(newValue) ? "-fx-text-fill: white;" : "-fx-text-fill: red;"));
 
-        // Add a focus change listener to the itemValueField to set the text back to 1 if it's invalid.
-        itemValueField.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
-            if (wasFocused && !isNowFocused && !isPositiveInteger(itemValueField.getText())) {
-                itemValueField.setText("1");
+        // Add a focus change listener to the valueField to set the text back to 1 if it's invalid.
+        valueField.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
+            if (wasFocused && !isNowFocused && !isPositiveInteger(valueField.getText())) {
+                valueField.setText("1");
             }
         });
 
-        // Add a change listener to the textProperty of the itemLevelField to only allow integers between 1 and the current max level.
-        itemLevelField.textProperty().addListener((observable, oldValue, newValue) -> itemLevelField.setStyle(isValidLevel(newValue) ? "-fx-text-fill: white;" : "-fx-text-fill: red;"));
+        // Add a change listener to the textProperty of the levelField to only allow integers between 1 and the current max level.
+        levelField.textProperty().addListener((observable, oldValue, newValue) -> levelField.setStyle(isValidLevel(newValue) ? "-fx-text-fill: white;" : "-fx-text-fill: red;"));
 
-        // Add a focus change listener to the itemLevelField to set the text back to 1 if it's invalid.
-        itemLevelField.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
-            if (wasFocused && !isNowFocused && !isValidLevel(itemLevelField.getText())) {
-                itemLevelField.setText("1");
+        // Add a focus change listener to the levelField to set the text back to 1 if it's invalid.
+        levelField.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
+            if (wasFocused && !isNowFocused && !isValidLevel(levelField.getText())) {
+                levelField.setText("1");
             }
         });
 
-        // Add a change listener to the textProperty of the itemBountyLevelField to only allow the specified format.
-        itemBountyLevelField.textProperty().addListener((observable, oldValue, newValue) -> itemBountyLevelField.setStyle(Bounties.isValidBountyLevels(newValue) ? "-fx-text-fill: white;" : "-fx-text-fill: red;"));
+        // Add a change listener to the textProperty of the bountyLevelField to only allow the specified format.
+        bountyLevelField.textProperty().addListener((observable, oldValue, newValue) -> bountyLevelField.setStyle(Bounties.isValidBountyLevels(newValue) ? "-fx-text-fill: white;" : "-fx-text-fill: red;"));
 
-        // Add a focus change listener to the itemBountyLevelField to set the text back to 1 if it's invalid.
-        itemBountyLevelField.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
-            if (wasFocused && !isNowFocused && !Bounties.isValidBountyLevels(itemBountyLevelField.getText())) {
-                itemBountyLevelField.setText("");
+        // Add a focus change listener to the bountyLevelField to set the text back to 1 if it's invalid.
+        bountyLevelField.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
+            if (wasFocused && !isNowFocused && !Bounties.isValidBountyLevels(bountyLevelField.getText())) {
+                bountyLevelField.setText("");
             }
         });
 
@@ -117,44 +119,28 @@ public class ItemController extends BaseController {
         itemValueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
         itemLevelColumn.setCellValueFactory(new PropertyValueFactory<>("level"));
         itemBountyLevelColumn.setCellValueFactory(new PropertyValueFactory<>("bountyLevels"));
-        needResearchColumn.setCellValueFactory(new PropertyValueFactory<>("needResearch"));
+        researchLevelColumn.setCellValueFactory(new PropertyValueFactory<>("researchLevel"));
 
         // Set up a cell factory to allow editing of the cells.
         itemIdColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         itemValueColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         itemLevelColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         itemBountyLevelColumn.setCellFactory(TextFieldTableCell.forTableColumn(new BountyLevelStringConverter()));
-        needResearchColumn.setCellFactory(column -> new CheckBoxTableCell<>() {
-            @Override
-            public void updateItem(Boolean item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    CheckBox checkBox = new CheckBox();
-                    checkBox.selectedProperty().setValue(item);
-                    checkBox.selectedProperty().addListener((obs, oldValue, newValue) -> {
-                        Item currentItem = getTableView().getItems().get(getIndex());
-                        currentItem.setNeedResearch(newValue);
-                    });
-                    setGraphic(checkBox);
-                }
-            }
-        });
+        researchLevelColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
         // Handle the editCommit event to update the item when the cell is edited.
         itemIdColumn.setOnEditCommit(event -> event.getRowValue().setId(event.getNewValue()));
         itemValueColumn.setOnEditCommit(event -> event.getRowValue().setValue(event.getNewValue()));
         itemLevelColumn.setOnEditCommit(event -> event.getRowValue().setLevel(event.getNewValue()));
         itemBountyLevelColumn.setOnEditCommit(event -> event.getRowValue().setBountyLevels(event.getNewValue()));
-        needResearchColumn.setOnEditCommit(event -> event.getRowValue().setNeedResearch(event.getNewValue()));
+        researchLevelColumn.setOnEditCommit(event -> event.getRowValue().setResearchLevel(event.getNewValue()));
 
         // Bind the prefWidthProperty of each TableColumn to a percentage of the TableView's width.
         itemIdColumn.prefWidthProperty().bind(itemTable.widthProperty().multiply(0.4));
         itemValueColumn.prefWidthProperty().bind(itemTable.widthProperty().multiply(0.12));
         itemLevelColumn.prefWidthProperty().bind(itemTable.widthProperty().multiply(0.12));
         itemBountyLevelColumn.prefWidthProperty().bind(itemTable.widthProperty().multiply(0.2));
-        needResearchColumn.prefWidthProperty().bind(itemTable.widthProperty().multiply(0.16));
+        researchLevelColumn.prefWidthProperty().bind(itemTable.widthProperty().multiply(0.16));
 
         // Set the action of the addButton to call the addItem method.
         addButton.setOnAction(e -> addItem());
@@ -171,18 +157,27 @@ public class ItemController extends BaseController {
      * The item is created using the text from the input fields.
      */
     private void addItem() {
-        String itemId = itemIdField.getText();
-        String itemValueText = itemValueField.getText();
-        String itemLevelText = itemLevelField.getText();
-        String itemBountyLevelsText = itemBountyLevelField.getText();
+        String itemId = idField.getText();
+        String itemValueText = valueField.getText();
+        String itemLevelText = levelField.getText();
+        String itemBountyLevelsText = bountyLevelField.getText();
 
         int itemValue = Integer.parseInt(itemValueText);
         int itemLevel = Integer.parseInt(itemLevelText);
         Set<Integer> itemBountyLevels = Bounties.parseBountyLevels(itemBountyLevelsText);
         boolean needResearch = needResearchCheckBox.isSelected();
+        Item item;
 
-        // Create a new Item and add it to the ItemList.
-        Item item = new Item(itemId, itemValue, itemLevel, itemBountyLevels, needResearch);
+        if (!needResearch) {
+            item = new Item(itemId, itemValue, itemLevel, itemBountyLevels);
+        } else {
+            String researchLevel = researchLevelField.getText();
+            if (researchLevel.isEmpty()) {
+                researchLevel = itemId.contains(":") ? itemId.split(":")[1] : itemId;
+            }
+            item = new Item(itemId, itemValue, itemLevel, itemBountyLevels, researchLevel);
+        }
+
         Items.getInstance().addItem(item);
     }
 

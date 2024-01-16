@@ -10,18 +10,25 @@ public class Item {
     private int value;
     private int level;
     private Set<Integer> bountyLevels;
-    private boolean needResearch;
+    private String researchLevel;
 
     public Item() {
-        bountyLevels = new HashSet<>();
     }
 
-    public Item(String id, int value, int level, Set<Integer> bountyLevels, boolean needResearch) {
+    public Item(String id, int value, int level, Set<Integer> bountyLevels) {
         this.id = id;
         this.value = value;
         this.level = level;
         this.bountyLevels = bountyLevels;
-        this.needResearch = needResearch;
+        this.researchLevel = "";
+    }
+
+    public Item(String id, int value, int level, Set<Integer> bountyLevels, String researchLevel) {
+        this.id = id;
+        this.value = value;
+        this.level = level;
+        this.bountyLevels = bountyLevels;
+        this.researchLevel = researchLevel;
     }
 
     public String getId() {
@@ -40,8 +47,8 @@ public class Item {
         return bountyLevels;
     }
 
-    public boolean getNeedResearch() {
-        return needResearch;
+    public String getResearchLevel() {
+        return researchLevel;
     }
 
     public void setId(String id) {
@@ -60,7 +67,7 @@ public class Item {
         this.bountyLevels = bountyLevels;
     }
 
-    public void setNeedResearch(boolean needResearch) {
-        this.needResearch = needResearch;
+    public void setResearchLevel(String researchLevel) {
+        this.researchLevel = researchLevel;
     }
 }

@@ -134,11 +134,10 @@ public class ExportController extends BaseController {
             }
 
             String itemId = item.getId();
-            String itemName = itemId.contains(":") ? itemId.split(":")[1] : itemId;
             String stageName = "level_" + currentLevel;
 
-            if (currentLevel == 1 && item.getNeedResearch()) {
-                stageName += "_" + itemName;
+            if (currentLevel == 1 && item.getResearchLevel() != null) {
+                stageName += "_" + item.getResearchLevel();
             }
 
             if (itemId.startsWith("#")) {

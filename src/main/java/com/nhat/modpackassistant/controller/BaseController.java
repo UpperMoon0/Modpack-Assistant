@@ -23,6 +23,7 @@ public abstract class BaseController {
             borderPane.setCenter(newView);
         } catch (IOException ioException) {
             showErrorAlert("Error loading view", "Could not load the view: " + viewPath);
+            ioException.printStackTrace();
         }
     }
 
