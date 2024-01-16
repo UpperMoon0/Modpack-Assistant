@@ -7,11 +7,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class ExportController extends BaseController {
 
@@ -73,6 +77,15 @@ public class ExportController extends BaseController {
         for (int i = 1; i <= maxBountyLevel; i++) {
             createFileInDirectory(bountyPoolPath, "level_" + i + "_objs.json", generateObjsContent(i));
             createFileInDirectory(bountyPoolPath, "level_" + i + "_rews.json", generateRewsContent(i));
+        }
+
+        // Create zip file
+        Path zipFilePath = Paths.get(exportPath.toString(), "resourcepacks", "gen_bh_bounties.zip");
+        try {
+            zipDirectory(tempDirPath, zipFilePath);
+            clearDirectory(tempDirPath);
+        } catch (IOException ex) {
+            System.err.println("Error creating zip file or clearing directory: " + ex.getMessage());
         }
     }
 
@@ -260,5 +273,34 @@ public class ExportController extends BaseController {
         }
 
         return "{\n" + content + "\n}";
+    }
+
+    private void zipDirectory(Path sourceDirPath, Path zipFilePath) throws IOException {
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFilePath.toFile()));
+             Stream<Path> paths = Files.walk(sourceDirPath)) {
+                 paths.filter(path -> !Files.isDirectory(path)).forEach(path -> {
+                     ZipEntry zipEntry = new ZipEntry(sourceDirPath.relativize(path).toString());
+                     try {
+                         zipOutputStream.putNextEntry(zipEntry);
+                         Files.copy(path, zipOutputStream);
+                         zipOutputStream.closeEntry();
+                     } catch (IOException ex) {
+                         System.err.println("Error adding entry to zip file: " + ex.getMessage());
+                     }
+             });
+        }
+    }
+
+    private void clearDirectory(Path dirPath) throws IOException {
+        try (Stream<Path> paths = Files.walk(dirPath)) {
+             paths.sorted(Comparator.reverseOrder()).skip(1) // Skip the directory itself
+             .forEach(path -> {
+                 try {
+                     Files.delete(path);
+                 } catch (IOException ex) {
+                     System.err.println("Error deleting file: " + ex.getMessage());
+                 }
+             });
+        }
     }
 }
