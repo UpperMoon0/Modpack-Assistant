@@ -70,6 +70,7 @@ public class CreatePrjController extends InitPrjController {
                         String path = Paths.get(projectLocation, formattedProjectName).toString();
                         Files.createDirectories(Paths.get(path, "bounties"));
                         Files.createDirectories(Paths.get(path, "items"));
+                        Files.createDirectories(Paths.get(path, "temp"));
 
                         // Load the bottom view and top view
                         loadTopView("/com/nhat/modpackassistant/top-bar-bh-view.fxml", createButton);

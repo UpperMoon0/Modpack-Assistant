@@ -125,7 +125,7 @@ public class Bounties {
         Set<Integer> levels = parseBountyLevels(levelsString);
 
         for (int level : levels) {
-            if (level <= 0 || level >= MaxLevel.getInstance().getLevel()) {
+            if (level <= 0 || level > Bounties.getInstance().getBounties().size()) {
                 return false;
             }
         }
@@ -157,5 +157,20 @@ public class Bounties {
             }
         }
         return levelSet;
+    }
+
+    /**
+     * Returns the bounty with the specified level.
+     *
+     * @param level the level of the bounty to return
+     * @return the bounty with the specified level
+     */
+    public Bounty getBountyByLevel(int level) {
+        for (Bounty bounty : bounties) {
+            if (bounty.getLevel() == level) {
+                return bounty;
+            }
+        }
+        return null;
     }
 }

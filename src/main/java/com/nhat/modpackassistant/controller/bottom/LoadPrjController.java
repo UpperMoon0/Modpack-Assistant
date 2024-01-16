@@ -64,7 +64,6 @@ public class LoadPrjController extends InitPrjController {
                         Bounties.loadBounties();
                     } catch (IOException ex) {
                         showErrorAlert("Error loading bounties", "Could not load bounties from JSON file.");
-                        ex.printStackTrace();
                     }
 
                     break;
