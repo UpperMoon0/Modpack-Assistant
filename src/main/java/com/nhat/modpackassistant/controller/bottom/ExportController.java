@@ -233,6 +233,12 @@ public class ExportController extends BaseController {
             }
         }
 
+        // Remove the trailing comma from the last object
+        int lastCommaIndex = content.lastIndexOf(",");
+        if (lastCommaIndex != -1) {
+            content.deleteCharAt(lastCommaIndex);
+        }
+
         return "{\n" + content + "\n}";
     }
 
@@ -272,6 +278,12 @@ public class ExportController extends BaseController {
                     break; // break out of the inner loop once a coin is used for a reward
                 }
             }
+        }
+
+        // Remove the trailing comma from the last object
+        int lastCommaIndex = content.lastIndexOf(",");
+        if (lastCommaIndex != -1) {
+            content.deleteCharAt(lastCommaIndex);
         }
 
         return "{\n" + content + "\n}";
