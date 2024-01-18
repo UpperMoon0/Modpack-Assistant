@@ -80,7 +80,9 @@ public class ExportController extends BaseController {
         }
 
         // Create zip file
-        Path zipFilePath = Paths.get(exportPath.toString(), "resourcepacks", "gen_bh_bounties.zip");
+        Path resourcePackPath = Paths.get(exportPath.toString(), "resourcepacks");
+        createDirectory(resourcePackPath);
+        Path zipFilePath = Paths.get(resourcePackPath.toString(), "gen_bh_bounties.zip");
         try {
             zipDirectory(tempDirPath, zipFilePath);
             clearDirectory(tempDirPath);
@@ -149,7 +151,7 @@ public class ExportController extends BaseController {
             String itemId = item.getId();
             String stageName = "level_" + currentLevel;
 
-            if (currentLevel == 1 && item.getResearchLevel() != null) {
+            if (!item.getResearchLevel().isEmpty()) {
                 stageName += "_" + item.getResearchLevel();
             }
 
@@ -293,14 +295,16 @@ public class ExportController extends BaseController {
 
     private void clearDirectory(Path dirPath) throws IOException {
         try (Stream<Path> paths = Files.walk(dirPath)) {
-             paths.sorted(Comparator.reverseOrder()).skip(1) // Skip the directory itself
-             .forEach(path -> {
-                 try {
-                     Files.delete(path);
-                 } catch (IOException ex) {
-                     System.err.println("Error deleting file: " + ex.getMessage());
-                 }
-             });
+            paths.sorted(Comparator.reverseOrder())
+                 .forEach(path -> {
+                     try {
+                         if (!path.equals(dirPath)) { // Skip the directory itself
+                             Files.deleteIfExists(path);
+                         }
+                     } catch (IOException ex) {
+                         System.err.println("Error deleting file: " + ex.getMessage());
+                     }
+                 });
         }
     }
 }
