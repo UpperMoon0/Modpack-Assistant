@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -42,6 +44,12 @@ public class ExportController extends BaseController {
         });
     }
 
+    /**
+     * Creates all the necessary directories and files for exporting.
+     *
+     * @param exportPath the export path
+     * @param prjPath the project path
+     */
     private void createDirectoriesAndFiles(Path exportPath, String prjPath) {
         // Create gen_tooltips.js file
         Path dirPath = Paths.get(exportPath.toString(), "kubejs", "client_scripts");
@@ -69,7 +77,7 @@ public class ExportController extends BaseController {
         Path bountyDecreesDirPath = Paths.get(prjPath, "temp", "data", "bountiful", "bounty_decrees", "bountiful");
         int maxBountyLevel = Bounties.getInstance().getBounties().size();
         for (int i = 1; i <= maxBountyLevel; i++) {
-            String content = generateLevelContent(i);
+            String content = generateDecreeContent(i);
             createFileInDirectory(bountyDecreesDirPath, "level_" + i + ".json", content);
         }
 
@@ -91,6 +99,11 @@ public class ExportController extends BaseController {
         }
     }
 
+    /**
+     * Creates a directory at the specified path if it does not exist.
+     *
+     * @param dirPath the directory path
+     */
     private void createDirectory(Path dirPath) {
         try {
             if (!Files.exists(dirPath)) {
@@ -101,6 +114,13 @@ public class ExportController extends BaseController {
         }
     }
 
+    /**
+     * Creates a file at the specified path if it does not exist.
+     *
+     * @param dirPath the directory path
+     * @param fileName the file name
+     * @param content the file content
+     */
     private void createFileInDirectory(Path dirPath, String fileName, String content) {
         try {
             if (!Files.exists(dirPath)) {
@@ -166,20 +186,26 @@ public class ExportController extends BaseController {
         return content.toString();
     }
 
-    private String generateLevelContent(int level) {
+    private String generateDecreeContent(int level) {
         StringBuilder objectives = new StringBuilder();
-        for (int i = level; i >= Math.max(1, level - 2); i--) {
-            objectives.append("\t\t\"level_").append(i).append("_objs\",\n");
+        int startLevel = Math.max(1, level - 2);
+        for (int i = level; i >= startLevel; i--) {
+            objectives.append("\t\t\"level_").append(i).append("_objs\"");
+            if (i != startLevel) {
+                objectives.append(",\n");
+            }
         }
-        return "{\n" +
-                "\t\"objectives\": [\n" +
-                objectives +
-                "\t],\n" +
-                "\t\"rewards\": [\n" +
-                "\t\t\"level_" + level + "_rews\"\n" +
-                "\t],\n" +
-                "\t\"name\": \"Level " + level + "\"\n" +
-                "}";
+        return """
+            {
+                \t"objectives": [
+                %s
+                \t],
+                \t"rewards": [
+                \t\t"level_%d_rews"
+                \t],
+                \t"name": "Level %d"
+            }
+            """.formatted(objectives, level, level);
     }
 
     private String generateObjsContent(int level) {
@@ -199,16 +225,16 @@ public class ExportController extends BaseController {
                     // Handle tag item
                     content.append(String.format(
                             """
-                                    \t"obj_%d": {
-                                    \t\t"type": "item_tag",
-                                    \t\t"content": "%s",
-                                    \t\t"amount": {
-                                    \t\t\t"min": %d,
-                                    \t\t\t"max": %d
+                                    \t\t"obj_%d": {
+                                    \t\t\t"type": "item_tag",
+                                    \t\t\t"content": "%s",
+                                    \t\t\t"amount": {
+                                    \t\t\t\t"min": %d,
+                                    \t\t\t\t"max": %d
+                                    \t\t\t},
+                                    \t\t\t"unitWorth": %d,
+                                    \t\t\t"name": "Any %s"
                                     \t\t},
-                                    \t\t"unitWorth": %d,
-                                    \t\t"name": "Any %s"
-                                    \t},
                                     """,
                             orderNum, itemId.substring(1), minAmount, maxAmount, itemValue, itemId.substring(1)
                     ));
@@ -216,15 +242,15 @@ public class ExportController extends BaseController {
                     // Handle regular item
                     content.append(String.format(
                             """
-                                    \t"obj_%d": {
-                                    \t\t"type": "item",
-                                    \t\t"content": "%s",
-                                    \t\t"amount": {
-                                    \t\t\t"min": %d,
-                                    \t\t\t"max": %d
+                                    \t\t"obj_%d": {
+                                    \t\t\t"type": "item",
+                                    \t\t\t"content": "%s",
+                                    \t\t\t"amount": {
+                                    \t\t\t\t"min": %d,
+                                    \t\t\t\t"max": %d
+                                    \t\t\t},
+                                    \t\t\t"unitWorth": %d
                                     \t\t},
-                                    \t\t"unitWorth": %d
-                                    \t},
                                     """,
                             orderNum, itemId, minAmount, maxAmount, itemValue
                     ));
@@ -239,55 +265,50 @@ public class ExportController extends BaseController {
             content.deleteCharAt(lastCommaIndex);
         }
 
-        return "{\n" + content + "\n}";
+        return "{\n\t\"content\": {\n" + content + "\n\t}\n}";
     }
 
     private String generateRewsContent(int level) {
-        StringBuilder content = new StringBuilder();
-        Bounty bounty = Bounties.getInstance().getBountyByLevel(level);
+    List<String> rewards = new ArrayList<>();
+    Bounty bounty = Bounties.getInstance().getBountyByLevel(level);
 
-        for (int i = 0; i < RARITIES.length; i++) {
-            int minAmount = (int) Math.ceil(bounty.getMinValue() + (bounty.getMaxValue() - bounty.getMinValue()) * RARITY_PERCENTAGES[i]);
-            int maxAmount = (int) Math.ceil(bounty.getMinValue() + (bounty.getMaxValue() - bounty.getMinValue()) * RARITY_PERCENTAGES[i + 1]);
+    for (int i = 0; i < RARITIES.length; i++) {
+        int minAmount = (int) Math.ceil(bounty.getMinValue() + (bounty.getMaxValue() - bounty.getMinValue()) * RARITY_PERCENTAGES[i]);
+        int maxAmount = (int) Math.ceil(bounty.getMinValue() + (bounty.getMaxValue() - bounty.getMinValue()) * RARITY_PERCENTAGES[i + 1]);
 
-            for (int j = CURRENCIES.length - 1; j >= 0; j--) {
-                if (minAmount >= UNIT_WORTHS[j] || maxAmount >= UNIT_WORTHS[j]) {
-                    int minCoins = minAmount / UNIT_WORTHS[j];
-                    int maxCoins = maxAmount / UNIT_WORTHS[j];
+        for (int j = 0; j < CURRENCIES.length; j++) {
+            if (minAmount >= UNIT_WORTHS[j] || maxAmount >= UNIT_WORTHS[j]) {
+                int minCoins = minAmount / UNIT_WORTHS[j];
+                int maxCoins = maxAmount / UNIT_WORTHS[j];
 
-                    // Only use higher coin tier if value is greater than 64 of current coin
-                    if (minCoins > 64) {
-                        continue;
-                    }
-
-                    content.append(String.format(
-                            """
-                                    \t"rew_%d": {
-                                    \t\t"type": "item",
-                                    \t\t"rarity": "%s",
-                                    \t\t"content": "%s",
-                                    \t\t"amount": {
-                                    \t\t\t"min": %d,
-                                    \t\t\t"max": %d
-                                    \t\t},
-                                    \t\t"unitWorth": %d
-                                    \t},
-                                    """,
-                            i + 1, RARITIES[i], CURRENCIES[j], minCoins, maxCoins, UNIT_WORTHS[j]
-                    ));
-                    break; // break out of the inner loop once a coin is used for a reward
+                // Only use higher coin tier if value is greater than 64 of current coin
+                if (minCoins > 64) {
+                    continue;
                 }
+
+                String reward = String.format(
+                        """
+                                \t\t"rew_%d": {
+                                \t\t\t"type": "item",
+                                \t\t\t"rarity": "%s",
+                                \t\t\t"content": "%s",
+                                \t\t\t"amount": {
+                                \t\t\t\t"min": %d,
+                                \t\t\t\t"max": %d
+                                \t\t\t},
+                                \t\t\t"unitWorth": %d
+                                \t\t}""",
+                        i + 1, RARITIES[i], CURRENCIES[j], minCoins, maxCoins, UNIT_WORTHS[j]
+                );
+                rewards.add(reward);
+                break; // break out of the inner loop once a coin is used for a reward
             }
         }
-
-        // Remove the trailing comma from the last object
-        int lastCommaIndex = content.lastIndexOf(",");
-        if (lastCommaIndex != -1) {
-            content.deleteCharAt(lastCommaIndex);
-        }
-
-        return "{\n" + content + "\n}";
     }
+
+    String content = String.join(",\n", rewards);
+    return "{\n\t\"content\": {\n" + content + "\n\t}\n}";
+}
 
     private void zipDirectory(Path sourceDirPath, Path zipFilePath) throws IOException {
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFilePath.toFile()));

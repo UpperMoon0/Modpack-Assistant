@@ -3,6 +3,8 @@ package com.nhat.modpackassistant.model;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
@@ -56,8 +58,8 @@ public class MaxLevel {
      * @throws IOException if an I/O error occurs
      */
     public static void saveLevel() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(Paths.get(Project.getInstance().getPath(), "levels.json").toFile(), MaxLevel.getInstance().getLevel());
+        String level = String.valueOf(MaxLevel.getInstance().getLevel());
+        Files.writeString(Paths.get(Project.getInstance().getPath(), "levels.txt"), level);
     }
 
     /**
@@ -66,7 +68,7 @@ public class MaxLevel {
      * @throws IOException if an I/O error occurs
      */
     public static void loadLevels() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        MaxLevel.getInstance().setLevel(objectMapper.readValue(Paths.get(Project.getInstance().getPath(), "levels.json").toFile(), Integer.class));
+        String level = Files.readString(Paths.get(Project.getInstance().getPath(), "levels.txt"));
+        MaxLevel.getInstance().setLevel(Integer.parseInt(level.trim()));
     }
 }
