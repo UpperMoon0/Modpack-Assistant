@@ -291,8 +291,8 @@ public class ExportController extends BaseController {
     private void zipDirectory(Path sourceDirPath, Path zipFilePath) throws IOException {
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFilePath.toFile()));
              Stream<Path> paths = Files.walk(sourceDirPath)) {
-                 paths.filter(path -> !Files.isDirectory(path)).forEach(path -> {
-                     ZipEntry zipEntry = new ZipEntry(sourceDirPath.relativize(path).toString());
+                 paths.filter(Files::isRegularFile).forEach(path -> {
+                     ZipEntry zipEntry = new ZipEntry(sourceDirPath.relativize(path).toString().replace("\\", "/"));
                      try {
                          zipOutputStream.putNextEntry(zipEntry);
                          Files.copy(path, zipOutputStream);
@@ -300,7 +300,7 @@ public class ExportController extends BaseController {
                      } catch (IOException ex) {
                          System.err.println("Error adding entry to zip file: " + ex.getMessage());
                      }
-             });
+                 });
         }
     }
 
