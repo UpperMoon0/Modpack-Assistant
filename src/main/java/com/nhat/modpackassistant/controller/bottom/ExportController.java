@@ -51,10 +51,6 @@ public class ExportController extends BaseController {
      * @param prjPath the project path
      */
     private void createDirectoriesAndFiles(Path exportPath, String prjPath) {
-        // Create gen_tooltips.js file
-        Path dirPath = Paths.get(exportPath.toString(), "kubejs", "client_scripts");
-        createFileInDirectory(dirPath, "gen_item_tooltips.js", generateTooltipScript());
-
         // Create gen_item_stages.zs file
         Path scriptDirPath = Paths.get(exportPath.toString(), "scripts");
         createFileInDirectory(scriptDirPath, "gen_item_stages.zs", generateItemStagesScript());
@@ -134,24 +130,6 @@ public class ExportController extends BaseController {
         } catch (IOException ex) {
             System.err.println("Error creating directory or file: " + ex.getMessage());
         }
-    }
-
-    private String generateTooltipScript() {
-        StringBuilder content = new StringBuilder();
-        ObservableList<Item> items = Items.getInstance().getItems();
-        items.sort(Comparator.comparing(Item::getLevel));
-
-        int currentLevel = 0;
-        for (Item item : items) {
-            if (item.getLevel() != currentLevel) {
-                currentLevel = item.getLevel();
-                content.append("\n    // Level ").append(currentLevel).append("\n");
-            }
-            String itemId = item.getId();
-            content.append("    e.add('").append(itemId).append("', ['Value: ").append(item.getValue()).append("'])\n");
-        }
-
-        return "ItemEvents.tooltip((e) => {" + content + "})";
     }
 
     private String generateItemStagesScript() {
